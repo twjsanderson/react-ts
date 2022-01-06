@@ -1,30 +1,29 @@
-import * as React from 'react';
+import { useEffect, useState } from 'react';
 
-interface DataObject {
-  id: number;
-  text: {
-    name: string;
-    thing?: number;
-  };
+type DataObject = {
+  url: string;
 }
 
-interface DataArray extends Array<DataObject> {}
+type DataArray = Array<DataObject>
 
 const App = () => {
-  const data: DataArray = [
-    {
-      id: 1,
-      text: {
-        name: 'tom'
-      }
-    }
-  ]
+  const [imageData, setImageData] = useState<DataArray>([]);
+
+  useEffect(() => {
+    fetch('https://picsum.photos/200')
+      .then(data => {
+        return imageData.length < 3 ?
+          setImageData([...imageData, { url: data.url }]) :
+            null
+      })
+  }, [imageData.length])
+
   return (
     <div className='flex flex-col'>
-      <h1>Test</h1>
+      <h1>Show Images</h1>
       {
-        data.map(item => {
-          return <p key={item.id}>{item.text.name}</p>
+        imageData.map((image, index) => {
+          return <p key={index}>{image.url}</p>
         })
       }
       <p>butts</p>
