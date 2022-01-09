@@ -1,33 +1,31 @@
-import { useEffect, useState } from 'react';
-
-type DataObject = {
-  url: string;
-}
-
-type DataArray = Array<DataObject>
+import { useState } from 'react';
+import Todos from './components/Todos';
+import ShowImages from './components/ShowImages';
+import './index.css';
 
 const App = () => {
-  const [imageData, setImageData] = useState<DataArray>([]);
+  const [toggleImages, setToggleImages] = useState(false);
+  const [appName, setAppName] = useState('Show Images');
 
-  useEffect(() => {
-    fetch('https://picsum.photos/200')
-      .then(data => {
-        return imageData.length < 3 ?
-          setImageData([...imageData, { url: data.url }]) :
-            null
-      })
-  }, [imageData.length])
+  const changeApp = () => {
+    setToggleImages(!toggleImages);
+    setAppName(appName === 'Show Images' ? 'Show Todos' : 'Show Images')
+  }
 
   return (
-    <div className='flex flex-col'>
-      <h1>Show Images</h1>
+    <>
+      <button 
+        className='btn btn-blue'
+        onClick={changeApp}
+      >
+        {appName}
+      </button>
       {
-        imageData.map((image, index) => {
-          return <p key={index}>{image.url}</p>
-        })
+        toggleImages ?
+          <ShowImages /> :
+            <Todos />
       }
-      <p>butts</p>
-    </div>
+    </>
   );
 }
 
